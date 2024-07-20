@@ -1,7 +1,7 @@
 // Set the raffle address and end date
 const raffleAddress = '0x6CF375EcFAAc98E6697c42FD48b52a612136BD6A';
-const raffleEndDate = new Date('2024-07-25T00:00:00');
-const winnerAddress = 'winner-address-here'; // Update this manually after the raffle ends
+const raffleEndDate = new Date('2024-07-25T00:00:00'); // Adjust as needed
+const winnerAddress = 'winner-address-here'; // Update manually after the raffle ends
 
 // Display the raffle address
 document.getElementById('raffleAddress').innerText = raffleAddress;
@@ -10,6 +10,7 @@ document.getElementById('raffleAddress').innerText = raffleAddress;
 const countdownElement = document.getElementById('countdown');
 const winnerAnnouncementElement = document.getElementById('winnerAnnouncement');
 const winnerAddressElement = document.getElementById('winnerAddress');
+const accumulatedShibElement = document.getElementById('accumulatedShib');
 
 function updateCountdown() {
     const now = new Date();
@@ -30,4 +31,28 @@ function updateCountdown() {
     }
 }
 
+function updateAccumulatedShib() {
+    const url = `https://api.etherscan.io/api?module=account&action=balance&address=${raffleAddress}&apikey=${CONFIG.ETHERSCAN_API_KEY}`;
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === '1') {
+                const balance = data.result;
+                const shibAmount = balance / (10 ** 18); // Convert Wei to SHIB
+                accumulatedShibElement.innerText = shibAmount.toFixed(2) + ' SHIB';
+            } else {
+                console.error('Error in API response:', data);
+                accumulatedShibElement.innerText = 'Error loading balance';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching accumulated SHIB:', error);
+            accumulatedShibElement.innerText = 'Error loading balance';
+        });
+}
+
+// Initial load and refresh every 5 minutes
+updateCountdown();
+updateAccumulatedShib();
 const countdownInterval = setInterval(updateCountdown, 1000);
+setInterval(updateAccumulatedShib, 300000);
