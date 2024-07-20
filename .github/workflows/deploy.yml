@@ -1,4 +1,4 @@
-name: Deploy SHIB Raffle
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -7,19 +7,26 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Create config.js
+      - name: Set up config.js
         run: |
           echo "const CONFIG = { ETHERSCAN_API_KEY: '${{ secrets.ETHERSCAN_API_KEY }}' };" > config.js
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GH_TOKEN }}
           publish_dir: ./
+          publish_branch: gh-pages
+          allow_empty_commit: false
+          keep_files: false
+          force_orphan: true
+          enable_jekyll: false
+          disable_nojekyll: true
+          exclude_assets: .github
