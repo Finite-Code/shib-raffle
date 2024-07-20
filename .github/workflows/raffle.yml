@@ -1,0 +1,22 @@
+name: SHIB Raffle
+on:
+  schedule:
+    - cron: '0 0 * * *' # Run daily at midnight
+  workflow_dispatch:
+jobs:
+  raffle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: pip install requests
+      - name: Run raffle script
+        env:
+          RAFFLE_ADDRESS: ${{ secrets.RAFFLE_ADDRESS }}
+          ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+        run: python raffle_script.py
