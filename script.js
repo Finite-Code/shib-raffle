@@ -1,5 +1,5 @@
 // Set the raffle address and end date
-const raffleAddress = 'your-shib-address-here';
+const raffleAddress = '0x6CF375EcFAAc98E6697c42FD48b52a612136BD6A';
 const raffleEndDate = new Date('2024-07-25T00:00:00');
 
 // Display the raffle address
